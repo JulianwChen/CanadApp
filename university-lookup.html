@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canadapp - University Lookup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            margin: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .btn-container {
+            display: inline-block;
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+            transition: all 0.3s ease;
+            border-radius: 9999px;
+            color: #fff;
+        }
+
+        .btn-gradient:hover {
+            box-shadow: 0 12px 24px rgba(107, 72, 255, 0.5);
+        }
+
+        .chat-bubble {
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.02);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.9);
+            z-index: 30;
+            padding: 0.55rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav ul li a {
+            color: #fff;
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #00ddeb;
+        }
+
+        section {
+            padding: 6rem 0;
+        }
+
+        /* University Lookup Specific Styles */
+        .filter-container {
+            background: #252525;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .university-card {
+            background: #252525;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .university-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .university-card .header {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+            padding: 1rem;
+            position: relative;
+        }
+
+        .university-card .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .university-card .content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .university-card .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .university-card .stat {
+            text-align: center;
+        }
+
+        .university-card .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #00ddeb;
+        }
+
+        .university-card .stat-label {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .university-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .university-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .university-modal-content {
+            background: #252525;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .university-modal-header {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+            padding: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .university-modal-body {
+            padding: 2rem;
+        }
+
+        .university-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .university-modal-close:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .program-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .program-item {
+            background: #333;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .program-item:hover {
+            background: #444;
+            transform: translateY(-2px);
+        }
+
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid #00ddeb;
+            color: #00ddeb;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            background: #333;
+            border: none;
+            border-radius: 0.5rem;
+            color: #fff;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .filter-dropdown {
+            width: 100%;
+            padding: 0.75rem;
+            background: #333;
+            border: none;
+            border-radius: 0.5rem;
+            color: #fff;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .pagination-item {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 0.25rem;
+            border-radius: 0.5rem;
+            background: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-item:hover {
+            background: #444;
+        }
+
+        .pagination-item.active {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 0.25rem;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .university-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .university-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .university-table th,
+        .university-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        .university-table th {
+            background: #222;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .university-table tr {
+            transition: background 0.3s ease;
+        }
+
+        .university-table tr:hover {
+            background: #2a2a2a;
+        }
+
+        .university-table .ranking {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+            border-radius: 50%;
+            font-weight: 600;
+        }
+
+        .view-toggle {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .view-toggle-btn {
+            padding: 0.5rem 1rem;
+            background: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle-btn:first-child {
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+        }
+
+        .view-toggle-btn:last-child {
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+
+        .view-toggle-btn.active {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+        }
+
+        .view-toggle-btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .university-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .university-table th:nth-child(3),
+            .university-table td:nth-child(3),
+            .university-table th:nth-child(4),
+            .university-table td:nth-child(4) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+    <!-- Navigation Menu -->
+    <nav>
+        <div class="logo">Canadapp</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="why-us.html">Why Us</a></li>
+            <li><a href="signup.html">Sign Up</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="help-desk.html">Help Desk</a></li>
+            <li><a href="university-lookup.html">Universities</a></li>
+        </ul>
+    </nav>
+
+    <!-- University Lookup Section -->
+    <section class="px-6 pt-20">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-6xl md:text-7xl font-extrabold mb-10 fade-in-up">University Lookup</h1>
+            <p class="text-2xl md:text-3xl mb-12 fade-in-up" style="animation-delay: 0.2s;">
+                Explore Canadian universities and find your perfect match.
+            </p>
+
+            <!-- Add this button just before the filter container -->
+            <button id="update-data" class="bg-green-500 text-white px-4 py-2 rounded mb-4">
+                Update Data
+            </button>
+
+            <!-- Filters -->
+            <div class="filter-container fade-in-up" style="animation-delay: 0.3s;">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="university-search" placeholder="Search universities...">
+                    </div>
+                    <div>
+                        <select id="province-filter" class="filter-dropdown">
+                            <option value="">All Provinces</option>
+                            <option value="ON">Ontario</option>
+                            <option value="QC">Quebec</option>
+                            <option value="BC">British Columbia</option>
+                            <option value="AB">Alberta</option>
+                            <option value="MB">Manitoba</option>
+                            <option value="SK">Saskatchewan</option>
+                            <option value="NS">Nova Scotia</option>
+                            <option value="NB">New Brunswick</option>
+                            <option value="NL">Newfoundland and Labrador</option>
+                            <option value="PE">Prince Edward Island</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="program-filter" class="filter-dropdown">
+                            <option value="">All Programs</option>
+                            <option value="business">Business</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="arts">Arts & Humanities</option>
+                            <option value="science">Science</option>
+                            <option value="medicine">Medicine</option>
+                            <option value="law">Law</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="sort-filter" class="filter-dropdown">
+                            <option value="rank">Sort by Ranking</option>
+                            <option value="name">Sort by Name</option>
+                            <option value="tuition-asc">Tuition: Low to High</option>
+                            <option value="tuition-desc">Tuition: High to Low</option>
+                            <option value="acceptance">Acceptance Rate</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle fade-in-up" style="animation-delay: 0.4s;">
+                <div class="view-toggle-btn active" data-view="grid">
+                    <i class="fas fa-th"></i> Grid
+                </div>
+                <div class="view-toggle-btn" data-view="table">
+                    <i class="fas fa-list"></i> Table
+                </div>
+            </div>
+
+            <!-- University Grid View -->
+            <div id="university-grid" class="university-grid fade-in-up" style="animation-delay: 0.5s;">
+                <!-- University cards will be populated here -->
+                <div class="skeleton-card">
+                    <div class="university-card">
+                        <div class="header skeleton" style="height: 100px;"></div>
+                        <div class="content">
+                            <div class="skeleton" style="height: 24px; width: 80%; margin-bottom: 0.5rem;"></div>
+                            <div class="skeleton" style="height: 16px; width: 60%; margin-bottom: 1rem;"></div>
+                            <div class="skeleton" style="height: 16px; width: 100%; margin-bottom: 0.5rem;"></div>
+                            <div class="skeleton" style="height: 16px; width: 100%; margin-bottom: 0.5rem;"></div>
+                            <div class="skeleton" style="height: 16px; width: 70%; margin-bottom: 1rem;"></div>
+                            <div class="stats">
+                                <div class="stat">
+                                    <div class="skeleton" style="height: 24px; width: 40px; margin: 0 auto 0.5rem;"></div>
+                                    <div class="skeleton" style="height: 16px; width: 60px; margin: 0 auto;"></div>
+                                </div>
+                                <div class="stat">
+                                    <div class="skeleton" style="height: 24px; width: 40px; margin: 0 auto 0.5rem;"></div>
+                                    <div class="skeleton" style="height: 16px; width: 60px; margin: 0 auto;"></div>
+                                </div>
+                                <div class="stat">
+                                    <div class="skeleton" style="height: 24px; width: 40px; margin: 0 auto 0.5rem;"></div>
+                                    <div class="skeleton" style="height: 16px; width: 60px; margin: 0 auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Repeat skeleton cards for loading state -->
+            </div>
+
+            <!-- University Table View -->
+            <div id="university-table-container" class="fade-in-up" style="animation-delay: 0.5s; display: none;">
+                <div class="overflow-x-auto">
+                    <table class="university-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>University</th>
+                                <th>Location</th>
+                                <th>Programs</th>
+                                <th>Tuition (Domestic)</th>
+                                <th>Acceptance Rate</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="university-table-body">
+                            <!-- Table rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination fade-in-up" style="animation-delay: 0.6s;" id="pagination">
+                <!-- Pagination will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- University Detail Modal -->
+    <div class="university-modal" id="university-modal">
+        <div class="university-modal-content">
+            <div class="university-modal-header">
+                <h2 class="text-2xl font-bold" id="modal-university-name">University Name</h2>
+                <div class="university-modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="university-modal-body">
+                <div class="tab-container">
+                    <div class="tab active" data-tab="overview">Overview</div>
+                    <div class="tab" data-tab="programs">Programs</div>
+                    <div class="tab" data-tab="admissions">Admissions</div>
+                    <div class="tab" data-tab="campus">Campus Life</div>
+                </div>
+
+                <div class="tab-content active" data-tab-content="overview">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">About</h3>
+                            <p id="modal-university-description">University description will appear here.</p>
+                            
+                            <h3 class="text-xl font-semibold mt-6 mb-4">Quick Facts</h3>
+                            <ul class="space-y-2">
+                                <li><span class="font-semibold">Founded:</span> <span id="modal-university-founded">Year</span></li>
+                                <li><span class="font-semibold">Student Population:</span> <span id="modal-university-population">Number</span></li>
+                                <li><span class="font-semibold">Student-Faculty Ratio:</span> <span id="modal-university-ratio">Ratio</span></li>
+                                <li><span class="font-semibold">Ranking:</span> <span id="modal-university-ranking">Rank</span></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Location</h3>
+                            <p id="modal-university-location">Location details will appear here.</p>
+                            
+                            <h3 class="text-xl font-semibold mt-6 mb-4">Tuition & Fees</h3>
+                            <ul class="space-y-2">
+                                <li><span class="font-semibold">Domestic:</span> <span id="modal-university-tuition-domestic">Amount</span></li>
+                                <li><span class="font-semibold">International:</span> <span id="modal-university-tuition-international">Amount</span></li>
+                                <li><span class="font-semibold">Residence:</span> <span id="modal-university-residence">Amount</span></li>
+                                <li><span class="font-semibold">Books & Supplies:</span> <span id="modal-university-books">Amount</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" data-tab-content="programs">
+                    <h3 class="text-xl font-semibold mb-4">Popular Programs</h3>
+                    <div class="program-list" id="modal-university-programs">
+                        <!-- Programs will be populated here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" data-tab-content="admissions">
+                    <h3 class="text-xl font-semibold mb-4">Admission Requirements</h3>
+                    <p id="modal-university-admission-info">Admission information will appear here.</p>
+                    
+                    <h3 class="text-xl font-semibold mt-6 mb-4">Acceptance Rate</h3>
+                    <p id="modal-university-acceptance">Acceptance rate information will appear here.</p>
+                    
+                    <h3 class="text-xl font-semibold mt-6 mb-4">Application Deadlines</h3>
+                    <ul class="space-y-2" id="modal-university-deadlines">
+                        <!-- Deadlines will be populated here -->
+                    </ul>
+                </div>
+
+                <div class="tab-content" data-tab-content="campus">
+                    <h3 class="text-xl font-semibold mb-4">Campus Facilities</h3>
+                    <p id="modal-university-facilities">Campus facilities information will appear here.</p>
+                    
+                    <h3 class="text-xl font-semibold mt-6 mb-4">Student Life</h3>
+                    <p id="modal-university-student-life">Student life information will appear here.</p>
+                    
+                    <h3 class="text-xl font-semibold mt-6 mb-4">Housing</h3>
+                    <p id="modal-university-housing">Housing information will appear here.</p>
+                </div>
+
+                <div class="mt-8">
+                    <div class="btn-container">
+                        <button class="btn-gradient py-3 px-8 text-lg font-semibold" id="modal-apply-btn">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canadapp AI Chat Widget -->
+    <div id="chat-widget"
+        class="fixed bottom-12 right-12 w-80 bg-gray-900 bg-opacity-90 rounded-2xl shadow-2xl hidden flex-col z-20">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-3 rounded-t-2xl flex justify-between items-center">
+            <h3 class="text-lg font-semibold">Canadapp AI <span class="text-sm font-normal">Powered by Grok</span></h3>
+            <button id="close-chat" class="text-white hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="chat-messages" class="p-4 flex-1 overflow-y-auto h-64 bg-gray-800 bg-opacity-50 rounded-b-2xl">
+            <div class="chat-bubble bg-indigo-500 p-3 rounded-lg mb-3 text-lg">
+                Hi! I'm Canadapp AI, powered by Grok from xAI. How can I assist you today?
+            </div>
+        </div>
+        <div class="p-4">
+            <input id="chat-input" type="text" placeholder="Ask me anything..."
+                class="w-full p-3 rounded-lg bg-gray-700 bg-opacity-70 text-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-400">
+        </div>
+    </div>
+    <div class="btn-container fixed bottom-12 right-12 z-20">
+        <button id="chat-toggle" class="btn-gradient p-4 float">
+            <i class="fas fa-comment-dots text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Include script includes file -->
+    <script src="js/script-includes.js"></script>
+    <script src="js/university-data.js"></script>
+    <script src="js/university-lookup.js"></script>
+</body>
+
+</html>
+

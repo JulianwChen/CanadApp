@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canadapp - Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            margin: 0;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideLeftGravity {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-20vw);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .slide-left {
+            animation: slideLeftGravity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+            animation-delay: 0.6s;
+        }
+
+        .btn-container {
+            display: inline-block;
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+            transition: all 0.3s ease;
+            border-radius: 9999px;
+            color: #fff;
+        }
+
+        .btn-gradient:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .btn-gradient:hover:not(:disabled) {
+            box-shadow: 0 12px 24px rgba(107, 72, 255, 0.5);
+        }
+
+        .chat-bubble {
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.02);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.9);
+            z-index: 30;
+            padding: 0.55rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav ul li a {
+            color: #fff;
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #00ddeb;
+        }
+
+        section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .signup-container {
+            position: relative;
+            max-width: 1200px;
+            width: 100%;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .signup-form {
+            background: #252525;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 400px;
+            width: 100%;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .payment-form {
+            background: #252525;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 100%;
+            display: none;
+            opacity: 0;
+            position: absolute;
+            left: calc(400px + 2rem);
+            top: 0;
+        }
+
+        .signup-form input,
+        .payment-form input,
+        .payment-form select {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: #333;
+            color: #fff;
+        }
+
+        .payment-form select {
+            appearance: none;
+            background: #333 url('data:image/svg+xml;utf8,<svg fill="%23fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 0.75rem center;
+        }
+
+        .payment-form .plan-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-form .plan-details img {
+            width: 50px;
+            height: 50px;
+            border-radius: 0.5rem;
+        }
+
+        .payment-form .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #444;
+            padding-bottom: 0.5rem;
+        }
+
+        .payment-form .name-fields {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .payment-form .name-fields input {
+            width: 50%;
+        }
+
+        .payment-form .flex {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .payment-form .flex input {
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+    <nav>
+        <div class="logo">Canadapp</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="why-us.html">Why Us</a></li>
+            <li><a href="signup.html">Sign Up</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="help-desk.html">Help Desk</a></li>
+        </ul>
+    </nav>
+    <section class="px-6 pt-20">
+        <div class="max-w-6xl">
+            <h1 class="text-6xl md:text-8xl font-extrabold mb-10 fade-in-up">Sign Up</h1>
+            <p class="text-2xl md:text-3xl mb-12 fade-in-up" style="animation-delay: 0.2s;">
+                Join Canadapp and simplify your university journey.
+            </p>
+            <div class="signup-container">
+                <div class="signup-form fade-in-up" style="animation-delay: 0.3s;">
+                    <h2 class="text-3xl font-semibold mb-6">Create Your Account</h2>
+                    <input id="name" type="text" placeholder="Full Name" class="fade-in-up"
+                        style="animation-delay: 0.4s;">
+                    <input id="email" type="email" placeholder="Email" class="fade-in-up"
+                        style="animation-delay: 0.5s;">
+                    <input id="password" type="password" placeholder="Password" class="fade-in-up"
+                        style="animation-delay: 0.6s;">
+                </div>
+                <div id="payment-form" class="payment-form">
+                    <div class="plan-details">
+                        <img id="plan-image" src="paperplane.png" alt="Plan Icon">
+                        <div>
+                            <h3 id="plan-title" class="text-xl font-semibold">Basic</h3>
+                            <p id="plan-price" class="text-lg">$9.99/mo</p>
+                        </div>
+                    </div>
+                    <div class="section-title">Payment Method</div>
+                    <input id="card-number" type="text" placeholder="Card Number" maxlength="19" class="fade-in-up"
+                        style="animation-delay: 0.8s;">
+                    <div class="name-fields">
+                        <input id="card-first-name" type="text" placeholder="First Name" class="fade-in-up"
+                            style="animation-delay: 0.9s;">
+                        <input id="card-last-name" type="text" placeholder="Last Name" class="fade-in-up"
+                            style="animation-delay: 1s;">
+                    </div>
+                    <div class="flex">
+                        <input id="card-expiry" type="text" placeholder="MM/YY" maxlength="5" class="fade-in-up"
+                            style="animation-delay: 1.1s;">
+                        <input id="card-cvc" type="text" placeholder="CVC" maxlength="4" class="fade-in-up"
+                            style="animation-delay: 1.2s;">
+                    </div>
+                    <div class="section-title">Billing Address</div>
+                    <input id="address" type="text" placeholder="Street Address" class="fade-in-up"
+                        style="animation-delay: 1.3s;">
+                    <input id="city" type="text" placeholder="City" class="fade-in-up" style="animation-delay: 1.4s;">
+                    <select id="province" class="fade-in-up" style="animation-delay: 1.5s;">
+                        <option value="AB">Alberta</option>
+                        <option value="BC">British Columbia</option>
+                        <option value="MB">Manitoba</option>
+                        <option value="NB">New Brunswick</option>
+                        <option value="NL">Newfoundland and Labrador</option>
+                        <option value="NS">Nova Scotia</option>
+                        <option value="ON">Ontario</option>
+                        <option value="PE">Prince Edward Island</option>
+                        <option value="QC">Quebec</option>
+                        <option value="SK">Saskatchewan</option>
+                        <option value="NT">Northwest Territories</option>
+                        <option value="NU">Nunavut</option>
+                        <option value="YT">Yukon</option>
+                    </select>
+                    <input id="postal-code" type="text" placeholder="Postal Code" maxlength="7" class="fade-in-up"
+                        style="animation-delay: 1.6s;">
+                    <input id="phone" type="text" placeholder="Phone" maxlength="14" class="fade-in-up"
+                        style="animation-delay: 1.7s;">
+                    <div class="btn-container mt-6">
+                        <button id="signup-btn" class="btn-gradient py-3 px-8 text-lg font-semibold float" disabled>
+                            Sign Up & Pay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="chat-widget"
+        class="fixed bottom-12 right-12 w-80 bg-gray-900 bg-opacity-90 rounded-2xl shadow-2xl hidden flex-col z-20">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-3 rounded-t-2xl flex justify-between items-center">
+            <h3 class="text-lg font-semibold">Canadapp AI <span class="text-sm font-normal">Powered by Grok</span></h3>
+            <button id="close-chat" class="text-white hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="chat-messages" class="p-4 flex-1 overflow-y-auto h-64 bg-gray-800 bg-opacity-50 rounded-b-2xl">
+            <div class="chat-bubble bg-indigo-500 p-3 rounded-lg mb-3 text-lg">
+                Hi! I’m Canadapp AI, powered by Grok from xAI. How can I assist you today?
+            </div>
+        </div>
+        <div class="p-4">
+            <input id="chat-input" type="text" placeholder="Ask me anything..."
+                class="w-full p-3 rounded-lg bg-gray-700 bg-opacity-70 text-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-400">
+        </div>
+    </div>
+    <div class="btn-container fixed bottom-12 right-12 z-20">
+        <button id="chat-toggle" class="btn-gradient p-4 float">
+            <i class="fas fa-comment-dots text-xl"></i>
+        </button>
+    </div>
+    <script>
+        // Preselect plan from URL query parameter and set image
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedPlan = urlParams.get('plan');
+        const planTitle = document.getElementById('plan-title');
+        const planPrice = document.getElementById('plan-price');
+        const planImage = document.getElementById('plan-image');
+
+        if (selectedPlan === 'pro') {
+            planTitle.textContent = 'Pro';
+            planPrice.textContent = '$19.99/mo';
+            planImage.src = 'airplane.webp';
+            planImage.alt = 'Pro Plan Icon';
+        } else {
+            planTitle.textContent = 'Basic';
+            planPrice.textContent = '$9.99/mo';
+            planImage.src = 'paperplane.png';
+            planImage.alt = 'Basic Plan Icon';
+        }
+
+        // Show payment form and enable button on input
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const signupForm = document.querySelector('.signup-form');
+        const paymentForm = document.getElementById('payment-form');
+        const signupBtn = document.getElementById('signup-btn');
+        const cardNumber = document.getElementById('card-number');
+        const cardFirstName = document.getElementById('card-first-name');
+        const cardLastName = document.getElementById('card-last-name');
+        const cardExpiry = document.getElementById('card-expiry');
+        const cardCvc = document.getElementById('card-cvc');
+        const address = document.getElementById('address');
+        const city = document.getElementById('city');
+        const province = document.getElementById('province');
+        const postalCode = document.getElementById('postal-code');
+        const phone = document.getElementById('phone');
+        let isPaymentFormShown = false;
+
+        function checkInputs() {
+            const allSignupFilled = nameInput.value.trim().length > 0 && emailInput.value.trim().length > 0 && passwordInput.value.trim().length > 0;
+            const allPaymentFilled =
+                cardNumber.value.replace(/\s/g, '').length === 16 && // Any 16-digit number
+                cardFirstName.value.trim().length > 0 &&
+                cardLastName.value.trim().length > 0 &&
+                cardExpiry.value.trim().length > 0 &&
+                cardCvc.value.trim().length >= 3 &&
+                address.value.trim().length > 0 &&
+                city.value.trim().length > 0 &&
+                province.value &&
+                postalCode.value.trim().length > 0 &&
+                phone.value.trim().length > 0;
+
+            if (allSignupFilled) {
+                if (!isPaymentFormShown) {
+                    signupForm.classList.add('slide-left');
+                    setTimeout(() => {
+                        paymentForm.style.display = 'block';
+                        paymentForm.classList.add('fade-in');
+                    }, 600); // Matches slide duration
+                    isPaymentFormShown = true;
+                }
+                signupBtn.disabled = !allPaymentFilled;
+            } else {
+                signupForm.classList.remove('slide-left');
+                paymentForm.style.display = 'none';
+                paymentForm.classList.remove('fade-in');
+                isPaymentFormShown = false;
+                signupBtn.disabled = true;
+            }
+        }
+
+        nameInput.addEventListener('input', checkInputs);
+        emailInput.addEventListener('input', checkInputs);
+        passwordInput.addEventListener('input', checkInputs);
+        cardNumber.addEventListener('input', checkInputs);
+        cardFirstName.addEventListener('input', checkInputs);
+        cardLastName.addEventListener('input', checkInputs);
+        cardExpiry.addEventListener('input', checkInputs);
+        cardCvc.addEventListener('input', checkInputs);
+        address.addEventListener('input', checkInputs);
+        city.addEventListener('input', checkInputs);
+        province.addEventListener('change', checkInputs);
+        postalCode.addEventListener('input', checkInputs);
+        phone.addEventListener('input', checkInputs);
+
+        // Format inputs
+        cardNumber.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = value;
+        });
+
+        cardExpiry.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+            if (value.length > 2) value = value.substring(0, 2) + '/' + value.substring(2);
+            e.target.value = value;
+        });
+
+        cardCvc.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+        });
+
+        postalCode.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().substring(0, 6);
+            if (value.length > 3) value = value.substring(0, 3) + ' ' + value.substring(3);
+            e.target.value = value;
+        });
+
+        phone.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '').substring(0, 10);
+            if (value.length > 6) {
+                e.target.value = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6)}`;
+            } else if (value.length > 3) {
+                e.target.value = `(${value.substring(0, 3)}) ${value.substring(3)}`;
+            } else if (value.length > 0) {
+                e.target.value = `(${value}`;
+            }
+        });
+
+        // Redirect to dashboard.html on signup button click
+        signupBtn.addEventListener('click', () => {
+            if (!signupBtn.disabled) {
+                const name = nameInput.value.trim();
+                window.location.href = `dashboard.html?name=${encodeURIComponent(name)}`;
+            }
+        });
+
+        // Chat widget logic
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatWidget = document.getElementById('chat-widget');
+        const closeChat = document.getElementById('close-chat');
+        const chatInput = document.getElementById('chat-input');
+        const chatMessages = document.getElementById('chat-messages');
+        chatToggle.addEventListener('click', () => {
+            chatWidget.classList.toggle('hidden');
+            chatToggle.parentElement.classList.toggle('hidden');
+        });
+        closeChat.addEventListener('click', () => {
+            chatWidget.classList.add('hidden');
+            chatToggle.parentElement.classList.remove('hidden');
+        });
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && chatInput.value.trim()) {
+                const userMessage = document.createElement('div');
+                userMessage.className = 'chat-bubble bg-gray-600 p-3 rounded-lg mb-3 text-lg text-right';
+                userMessage.textContent = chatInput.value;
+                chatMessages.appendChild(userMessage);
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'chat-bubble bg-indigo-500 p-3 rounded-lg mb-3 text-lg';
+                aiMessage.textContent = `I’m Canadapp AI, powered by Grok from xAI. You asked: "${chatInput.value}". As of March 05, 2025, I can provide real-time insights or analyze data for your applications. How can I help?`;
+                setTimeout(() => chatMessages.appendChild(aiMessage), 500);
+                chatInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canadapp - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            margin: 0;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutGravity {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            30% {
+                transform: translateY(-5px) scale(1.02);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(30px) scale(0.95);
+                opacity: 0;
+            }
+        }
+
+        @keyframes hoverLift {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .slide-out {
+            animation: slideOutGravity 0.8s ease-out forwards;
+        }
+
+        .btn-container {
+            display: inline-block;
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+            transition: all 0.3s ease;
+            border-radius: 9999px;
+            color: #fff;
+        }
+
+        .btn-gradient:hover {
+            box-shadow: 0 12px 24px rgba(107, 72, 255, 0.5);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.9);
+            z-index: 30;
+            padding: 0.4rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            transition: all 0.3s ease;
+            background: rgba(50, 50, 50, 0.8);
+            border-radius: 9999px;
+            padding: 0.3rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav ul li:hover {
+            animation: hoverLift 0.3s ease forwards;
+        }
+
+        nav ul li a {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        nav ul li:hover a {
+            color: #6b48ff;
+        }
+
+        section {
+            padding: 6rem 0;
+        }
+
+        .content {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: #252525;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .home-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .home-card {
+            background: #333;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .paywall {
+            text-align: center;
+            padding: 2rem;
+            background: #ff6b6b;
+            border-radius: 1rem;
+        }
+
+        .paywall-btn {
+            background: linear-gradient(135deg, #ff6b6b, #e74c3c);
+            padding: 0.75rem 1.5rem;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .paywall-btn:hover {
+            box-shadow: 0 12px 24px rgba(255, 107, 107, 0.5);
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            background: #1f2937;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chat-header {
+            background: linear-gradient(to right, #6b48ff, #00ddeb);
+            padding: 1rem;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1.1rem;
+            background: #333;
+            width: 100%;
+        }
+
+        .chat-bubble {
+            transition: all 0.3s ease;
+            color: #fff;
+            background: #6b48ff;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .chat-bubble.user {
+            background: #4b5563;
+            text-align: right;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.02);
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            background: #252525;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0;
+            border: none;
+            border-radius: 0.5rem;
+            background: #333;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            background: #444;
+            box-shadow: 0 0 0 2px #6b48ff;
+        }
+
+        select,
+        input:not(.chat-input),
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: none;
+            border-radius: 0.5rem;
+            background: #333;
+            color: #fff;
+        }
+
+        select {
+            appearance: none;
+            background: #333 url('data:image/svg+xml;utf8,<svg fill="%23fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 0.75rem center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 0.5rem 0;
+            background: #333;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            padding-left: 0.9rem;
+            padding-right: 0.9rem;
+        }
+
+        a {
+            color: #00ddeb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        a:hover {
+            color: #6b48ff;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+            padding: 0.75rem 1.5rem;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            box-shadow: 0 12px 24px rgba(241, 196, 15, 0.5);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+            padding: 0.75rem 1.5rem;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 12px 24px rgba(107, 72, 255, 0.5);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            padding: 0.5rem 1rem;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            box-shadow: 0 12px 24px rgba(231, 76, 60, 0.5);
+        }
+
+        .signout-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            padding: 0.75rem 1.5rem;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .signout-btn:hover {
+            box-shadow: 0 12px 24px rgba(231, 76, 60, 0.5);
+        }
+
+        .file-input-container {
+            position: relative;
+            margin: 0.5rem 0;
+        }
+
+        .file-input-container input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            width: 100%;
+            padding: 0.75rem;
+            background: #333;
+            border-radius: 0.5rem;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background: #444;
+        }
+
+        .file-input-label.selected {
+            background: #6b48ff;
+        }
+
+        .birthday-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: none;
+            border-radius: 0.5rem;
+            background: #333;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .birthday-input:focus {
+            background: #444;
+            box-shadow: 0 0 0 2px #6b48ff;
+        }
+
+        .birthday-input:invalid:focus {
+            box-shadow: 0 0 0 2px #ff6b6b;
+        }
+
+        #birthday-error {
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">Canadapp</div>
+        <ul>
+            <li><a href="#" onclick="showPage('home')">Home</a></li>
+            <li><a href="#" onclick="showPage('profile')">Profile</a></li>
+            <li><a href="#" onclick="showPage('apply')">Apply</a></li>
+            <li><a href="#" onclick="showPage('chat')">Chat</a></li>
+            <li><a href="#" onclick="signOut()">Sign Out</a></li>
+        </ul>
+    </nav>
+
+    <!-- Home Page (Dashboard) -->
+    <section>
+        <div id="home" class="content active fade-in-up">
+            <h2 class="text-3xl font-semibold mb-6">Welcome to Your Canadapp Journey</h2>
+            <p class="text-xl mb-4">Your one-stop hub for exploring and applying to Canada’s top universities. Let’s get
+                started!</p>
+            <div class="home-grid">
+                <div class="home-card">
+                    <h3 class="text-xl font-semibold mb-2">Build Your Profile</h3>
+                    <p class="text-lg">Add your details to streamline your applications.</p>
+                    <a href="#" onclick="showPage('profile')" class="mt-2 inline-block">Go to Profile</a>
+                </div>
+                <div class="home-card">
+                    <h3 class="text-xl font-semibold mb-2">Apply with Ease</h3>
+                    <p class="text-lg">Select programs and submit applications effortlessly.</p>
+                    <a href="#" onclick="showPage('apply')" class="mt-2 inline-block">Start Applying</a>
+                </div>
+                <div class="home-card">
+                    <h3 class="text-xl font-semibold mb-2">Chat & Learn</h3>
+                    <p class="text-lg">Get insights on programs and universities.</p>
+                    <a href="#" onclick="showPage('chat')" class="mt-2 inline-block">Ask Now</a>
+                </div>
+                <div class="home-card">
+                    <h3 class="text-xl font-semibold mb-2">Track Progress</h3>
+                    <p class="text-lg">Monitor your applications below.</p>
+                </div>
+            </div>
+            <h3 class="text-2xl font-semibold mt-6 mb-4">Your Applications</h3>
+            <ul id="selected-programs" class="text-lg"></ul>
+            <button class="signout-btn" onclick="signOut()">Sign Out</button>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile" class="content fade-in-up">
+            <h2 class="text-3xl font-semibold mb-6">Profile</h2>
+            <label class="text-lg">Name:</label><input type="text" id="name" placeholder="Enter your name">
+            <label class="text-lg">Birthday (YYYY-MM-DD):</label>
+            <input type="text" id="birthday" placeholder="YYYY-MM-DD" maxlength="10" class="birthday-input">
+            <span id="birthday-error" class="text-red-500 text-sm" style="display: none;"></span>
+            <label class="text-lg">Email:</label><input type="email" id="email" placeholder="Enter your email">
+            <label class="text-lg">Province/Territory:</label>
+            <select id="province">
+                <option value="ON">Ontario</option>
+                <option value="QC">Quebec</option>
+                <option value="BC">British Columbia</option>
+                <option value="AB">Alberta</option>
+                <option value="MB">Manitoba</option>
+                <option value="SK">Saskatchewan</option>
+                <option value="NB">New Brunswick</option>
+                <option value="NS">Nova Scotia</option>
+                <option value="PE">Prince Edward Island</option>
+                <option value="NL">Newfoundland and Labrador</option>
+                <option value="NT">Northwest Territories</option>
+                <option value="YT">Yukon</option>
+                <option value="NU">Nunavut</option>
+            </select>
+            <label class="text-lg">Grades:</label><textarea id="grades"
+                placeholder="Enter your academic history"></textarea>
+            <label class="text-lg">Documents:</label>
+            <div class="file-input-container">
+                <input type="file" id="documents" multiple>
+                <label for="documents" class="file-input-label">Choose Files</label>
+            </div>
+            <div class="btn-container mt-6">
+                <button class="btn-gradient py-3 px-8 text-lg font-semibold" onclick="saveProfile()">Save
+                    Profile</button>
+            </div>
+        </div>
+
+        <!-- Apply Section -->
+        <div id="apply" class="content fade-in-up">
+            <h2 class="text-3xl font-semibold mb-6">Apply</h2>
+            <label class="text-lg">Select University:</label>
+            <select id="university">
+                <option>University of Toronto</option>
+                <option>University of British Columbia (UBC)</option>
+                <option>McGill University</option>
+                <option>University of Alberta</option>
+                <option>University of Waterloo</option>
+                <option>Queen's University</option>
+                <option>McMaster University</option>
+                <option>Western University</option>
+                <option>University of Ottawa</option>
+                <option>Simon Fraser University (SFU)</option>
+                <option>York University</option>
+                <option>Dalhousie University</option>
+                <option>University of Calgary</option>
+                <option>University of Manitoba</option>
+            </select>
+            <label class="text-lg">Select Program:</label>
+            <select id="program">
+                <option>B.Sc. Biology</option>
+                <option>Bachelor of Commerce</option>
+                <option>B.Eng. Mechanical Engineering</option>
+                <option>B.A. Psychology</option>
+                <option>B.Sc. Computer Science</option>
+                <option>B.F.A. Visual Arts</option>
+                <option>B.Sc.N. Nursing</option>
+                <option>B.A. English</option>
+                <option>B.Eng. Civil Engineering</option>
+                <option>B.Sc. Physics</option>
+                <option>Bachelor of Health Sciences</option>
+                <option>B.Ed. Education</option>
+                <option>B.Sc. Mathematics</option>
+                <option>B.A. Sociology</option>
+            </select>
+            <div class="btn-container mt-6">
+                <button class="btn-gradient py-3 px-8 text-lg font-semibold" onclick="addProgram()">Add Program</button>
+            </div>
+            <h3 class="text-2xl font-semibold mt-6 mb-4">Current Programs</h3>
+            <ul id="current-programs" class="text-lg"></ul>
+        </div>
+
+        <!-- Chat Section -->
+        <div id="chat" class="content fade-in-up">
+            <h2 class="text-3xl font-semibold mb-6">Chat</h2>
+            <div id="chat-paywall" class="paywall">
+                <h3 class="text-2xl font-semibold mb-4">Unlock Chat Access</h3>
+                <p class="text-lg mb-4">To use the chatbot and research your programs, please subscribe for $10/month.
+                </p>
+                <p class="text-lg mb-4">Features include:</p>
+                <ul class="text-lg">
+                    <li>Program Information</li>
+                    <li>Program rankings</li>
+                    <li>Graduate outcomes</li>
+                    <li>Faculty</li>
+                    <li>etc.</li>
+                </ul>
+                <div class="btn-container mt-6">
+                    <button class="paywall-btn py-3 px-8 text-lg font-semibold" onclick="unlockChat()">Pay Now
+                        ($10/month)</button>
+                </div>
+            </div>
+            <div id="chat-interface" class="chat-container" style="display: none;">
+                <div class="chat-header">
+                    <h3 class="text-lg font-semibold">Canadapp AI <span class="text-sm font-normal">Powered by
+                            Grok</span></h3>
+                </div>
+                <div id="chat-messages" class="chat-messages">
+                    <div class="chat-bubble fade-in">Ask me anything about Canadian universities and programs!</div>
+                </div>
+                <div class="chat-input-area">
+                    <input id="chat-input" type="text" placeholder="Ask me anything..." class="chat-input">
+                    <div class="btn-container mt-4">
+                        <button class="btn-gradient py-2 px-6 text-lg font-semibold" onclick="sendChat()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic School-Specific Page -->
+        <div id="school-page" class="content fade-in-up"></div>
+    </section>
+
+    <script>
+        let programs = [];
+        let hasPaidForChat = localStorage.getItem('hasPaidForChat') === 'true';
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.content').forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) targetPage.classList.add('active');
+            if (pageId === 'chat') updateChatAccess();
+            if (pageId === 'home' || pageId === 'apply') updateProgramLists(false);
+        }
+
+        // Load Home page by default and initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
+            updateChatAccess();
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = decodeURIComponent(urlParams.get('name') || 'User');
+            document.querySelector('#home h2').textContent = `Welcome to Your Canadapp Journey, ${name}!`;
+            document.getElementById('name').value = name;
+            updateProgramLists(false);
+
+            // Chat Enter key functionality
+            document.getElementById('chat-input').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter' && this.value.trim() !== '') {
+                    sendChat();
+                }
+            });
+
+            // Birthday input handling
+            const birthdayInput = document.getElementById('birthday');
+            const errorSpan = document.getElementById('birthday-error');
+            birthdayInput.addEventListener('input', function () {
+                let value = this.value.replace(/\D/g, ''); // Remove non-digits
+                if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4);
+                if (value.length > 7) value = value.slice(0, 7) + '-' + value.slice(7);
+                this.value = value.slice(0, 10); // Limit to YYYY-MM-DD
+
+                // Validation
+                const [year, month, day] = value.split('-');
+                const currentYear = new Date().getFullYear();
+                let isValid = true;
+                errorSpan.style.display = 'none';
+                errorSpan.textContent = '';
+
+                if (value.length === 10) {
+                    if (!year || year < 1900 || year > currentYear) {
+                        isValid = false;
+                        errorSpan.textContent = `Year must be between 1900 and ${currentYear}.`;
+                    } else if (!month || month < 1 || month > 12) {
+                        isValid = false;
+                        errorSpan.textContent = 'Month must be between 01 and 12.';
+                    } else if (!day || day < 1 || day > 31) {
+                        isValid = false;
+                        errorSpan.textContent = 'Day must be between 01 and 31.';
+                    } else if (new Date(value).toString() === 'Invalid Date') {
+                        isValid = false;
+                        errorSpan.textContent = 'Invalid date.';
+                    }
+                    errorSpan.style.display = isValid ? 'none' : 'block';
+                    this.setCustomValidity(isValid ? '' : 'Invalid date');
+                } else if (value.length > 0) {
+                    this.setCustomValidity('Please complete the date (YYYY-MM-DD)');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        });
+
+        // Sign Out
+        function signOut() {
+            window.location.href = 'index.html';
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('name').value;
+            const birthday = document.getElementById('birthday').value;
+            const email = document.getElementById('email').value;
+            const birthdayInput = document.getElementById('birthday');
+            const profileSection = document.getElementById('profile');
+
+            if (name && birthday && email && birthdayInput.checkValidity()) {
+                localStorage.setItem('profile', JSON.stringify({ name, birthday }));
+                profileSection.classList.add('fade-in');
+                setTimeout(() => profileSection.classList.remove('fade-in'), 600);
+            } else {
+                // Show error without overwriting the section
+                const existingError = document.querySelector('#profile .error-message');
+                if (!existingError) {
+                    const errorP = document.createElement('p');
+                    errorP.className = 'text-red-500 fade-in error-message';
+                    errorP.textContent = 'Please fill in all required fields correctly.';
+                    profileSection.appendChild(errorP);
+                    setTimeout(() => errorP.remove(), 2000);
+                }
+            }
+        }
+
+        // Add Program with Duplicate Check
+        function addProgram() {
+            const university = document.getElementById('university').value;
+            const program = document.getElementById('program').value;
+            const programKey = `${university}-${program}`;
+            if (programs.some(p => `${p.university}-${p.program}` === programKey)) {
+                const applySection = document.getElementById('apply');
+                applySection.innerHTML += '<p class="text-red-500 fade-in">This program is already added!</p>';
+                setTimeout(() => document.querySelector('#apply .text-red-500')?.remove(), 2000);
+                return;
+            }
+            programs.push({ university, program, responses: {}, status: 'Draft' });
+            updateProgramLists(true);
+        }
+
+        // Delete Program with Slide Animation
+        function deleteProgram(index) {
+            const applyLi = document.querySelector(`#current-programs li:nth-child(${index + 1})`);
+            if (applyLi) {
+                applyLi.classList.add('slide-out');
+                setTimeout(() => {
+                    programs.splice(index, 1);
+                    updateProgramLists(false);
+                }, 800);
+            }
+        }
+
+        // Update Program Lists
+        function updateProgramLists(isAdding) {
+            const homeList = document.getElementById('selected-programs');
+            const applyList = document.getElementById('current-programs');
+            homeList.innerHTML = '';
+            applyList.innerHTML = '';
+            if (programs.length === 0) {
+                homeList.innerHTML = '<li class="text-lg">No applications added yet.</li>';
+            } else {
+                programs.forEach((p, index) => {
+                    homeList.innerHTML += `<li><a onclick="showSchoolPage(${index})">${p.program} at ${p.university} (${p.status})</a></li>`;
+                    const li = document.createElement('li');
+                    li.innerHTML = `${p.program} at ${p.university} <button class="delete-btn" onclick="deleteProgram(${index})">Delete</button> <a onclick="customizeProgram(${index})" class="ml-4">Customize</a>`;
+                    if (isAdding && index === programs.length - 1) li.classList.add('fade-in');
+                    applyList.appendChild(li);
+                });
+            }
+        }
+
+        // Show School-Specific Page (for Home)
+        function showSchoolPage(index) {
+            customizeProgram(index);
+        }
+
+        // Customize Program (Apply page)
+        function customizeProgram(index) {
+            const p = programs[index];
+            const schoolPage = document.getElementById('school-page');
+            let questions = [];
+            if (p.university === 'University of Toronto') {
+                questions = [
+                    'Tell us about a personal goal you have set for yourself, and how long you have been working to achieve this goal.',
+                    'Describe an example of a situation where you took on a leadership role.',
+                    'What is a big or unexpected challenge you have faced?'
+                ];
+            } else if (p.university === 'McMaster University') {
+                questions = [
+                    'Tell us about a time management strategy you used.',
+                    'Give us an example of a time you acted with integrity.',
+                    'How do you create a balance for yourself when working in a stressful environment?'
+                ];
+            } else if (p.university === 'Queen\'s University') {
+                questions = [
+                    'Why are you interested in this program at Queen’s?',
+                    'Describe a significant extracurricular activity and its impact on you.',
+                    'What skills do you bring to this program?'
+                ];
+            } else if (p.university === 'University of British Columbia (UBC)') {
+                questions = [
+                    'Tell us about who you are. How would your family or friends describe you?',
+                    'Tell us more about one activity that is important to you and what you learned.',
+                    'Describe the kind of community you want to be part of at UBC.'
+                ];
+            } else {
+                questions = [
+                    'Why are you interested in this program?',
+                    'Describe a challenge you’ve overcome.',
+                    'What are your career goals?'
+                ];
+            }
+
+            if (p.locked) {
+                schoolPage.innerHTML = `
+                    <h2 class="text-3xl font-semibold mb-6">${p.program} at ${p.university}</h2>
+                    <h3 class="text-2xl font-semibold mb-4">Your Responses</h3>
+                    <label class="text-lg">${questions[0]}</label>
+                    <p class="text-lg p-2 bg-gray-700 rounded">${p.responses.q1 || 'Not answered'}</p>
+                    <label class="text-lg">${questions[1]}</label>
+                    <p class="text-lg p-2 bg-gray-700 rounded">${p.responses.q2 || 'Not answered'}</p>
+                    <label class="text-lg">${questions[2]}</label>
+                    <p class="text-lg p-2 bg-gray-700 rounded">${p.responses.q3 || 'Not answered'}</p>
+                    <div class="btn-container mt-6">
+                        <p class="text-red-500 text-lg">This application is locked (Submitted).</p>
+                    </div>
+                `;
+            } else {
+                schoolPage.innerHTML = `
+                    <h2 class="text-3xl font-semibold mb-6">${p.program} at ${p.university}</h2>
+                    <h3 class="text-2xl font-semibold mb-4">Requirements</h3>
+                    <ul class="text-lg">
+                        <li>Minimum GPA: 3.0 (varies by program)</li>
+                        <li>Prerequisite Courses: e.g., Math 12, English 12</li>
+                        <li>Application Fee: $150 CAD</li>
+                    </ul>
+                    <h3 class="text-2xl font-semibold mt-6 mb-4">Supplemental Questions</h3>
+                    <label class="text-lg">${questions[0]}</label>
+                    <textarea id="q1-${index}" placeholder="Your answer...">${p.responses.q1 || ''}</textarea>
+                    <label class="text-lg">${questions[1]}</label>
+                    <textarea id="q2-${index}" placeholder="Your answer...">${p.responses.q2 || ''}</textarea>
+                    <label class="text-lg">${questions[2]}</label>
+                    <textarea id="q3-${index}" placeholder="Your answer...">${p.responses.q3 || ''}</textarea>
+                    <div class="btn-container mt-6">
+                        <button class="save-btn" onclick="saveAndExit(${index})">Save & Exit</button>
+                        <button class="submit-btn" onclick="submitProgram(${index})">Submit Application</button>
+                    </div>
+                `;
+            }
+            showPage('school-page');
+        }
+
+        // Save and Exit Program Responses
+        function saveAndExit(index) {
+            const p = programs[index];
+            p.responses.q1 = document.getElementById(`q1-${index}`).value;
+            p.responses.q2 = document.getElementById(`q2-${index}`).value;
+            p.responses.q3 = document.getElementById(`q3-${index}`).value;
+            p.status = 'Saved';
+            updateProgramLists(false);
+            const schoolPage = document.getElementById('school-page');
+            schoolPage.classList.add('fade-in');
+            setTimeout(() => {
+                schoolPage.classList.remove('fade-in');
+                showPage('apply');
+            }, 600);
+        }
+
+        // Submit Program
+        function submitProgram(index) {
+            const p = programs[index];
+            p.responses.q1 = document.getElementById(`q1-${index}`).value;
+            p.responses.q2 = document.getElementById(`q2-${index}`).value;
+            p.responses.q3 = document.getElementById(`q3-${index}`).value;
+            const schoolPage = document.getElementById('school-page');
+            if (p.responses.q1 && p.responses.q2 && p.responses.q3) {
+                p.status = 'Submitted';
+                p.locked = true;
+                updateProgramLists(false);
+                schoolPage.innerHTML += '<p class="text-green-500 fade-in">Submitted successfully! Fee: $150 CAD</p>';
+                setTimeout(() => {
+                    document.querySelector('#school-page .text-green-500')?.remove();
+                    showPage('apply'); // Changed to 'apply' and reduced timeout
+                }, 500);
+            } else {
+                schoolPage.innerHTML += '<p class="text-red-500 fade-in">Please answer all supplemental questions.</p>';
+                setTimeout(() => document.querySelector('#school-page .text-red-500')?.remove(), 2000);
+            }
+        }
+
+        // Unlock Chat Access
+        function unlockChat() {
+            hasPaidForChat = true;
+            localStorage.setItem('hasPaidForChat', 'true');
+            const chatSection = document.getElementById('chat');
+            chatSection.innerHTML += '<p class="text-green-500 fade-in">Payment successful! Chat unlocked.</p>';
+            setTimeout(() => {
+                document.querySelector('#chat .text-green-500')?.remove();
+                updateChatAccess();
+            }, 2000);
+        }
+
+        // Update Chat Access
+        function updateChatAccess() {
+            const paywallDiv = document.getElementById('chat-paywall');
+            const interfaceDiv = document.getElementById('chat-interface');
+            if (hasPaidForChat) {
+                paywallDiv.style.display = 'none';
+                interfaceDiv.style.display = 'flex';
+            } else {
+                paywallDiv.style.display = 'block';
+                interfaceDiv.style.display = 'none';
+            }
+        }
+
+        // Chat Function
+        function sendChat() {
+            const input = document.getElementById('chat-input').value;
+            const messages = document.getElementById('chat-messages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'chat-bubble user fade-in';
+            userMessage.textContent = input;
+            messages.appendChild(userMessage);
+
+            let response = "I'm here to assist you with Canadapp-related questions!";
+            const lowerInput = input.toLowerCase();
+            if (lowerInput.includes("deadline")) {
+                response = "University deadlines vary. For example, the University of Toronto often sets its application deadline around January 15 for the fall term. Want specifics for another school?";
+            } else if (lowerInput.includes("gpa")) {
+                response = "GPA requirements differ by program. McGill’s Medicine program typically requires a 3.8+, while Waterloo’s Engineering might need a 3.5+. Which program are you curious about?";
+            } else if (lowerInput.includes("ranking")) {
+                response = "Rankings shift annually, but UBC’s Computer Science is consistently top 5 in Canada, and U of T often leads in research. What program or university interests you?";
+            } else if (lowerInput.includes("outcome") || lowerInput.includes("jobs")) {
+                response = "Graduate outcomes depend on the field. Waterloo Engineering grads often land tech jobs with salaries around $70K CAD starting, while Queen’s Commerce grads excel in finance. What career path are you exploring?";
+            } else if (lowerInput.includes("tour") || lowerInput.includes("campus")) {
+                response = "Campus tours aren’t live here, but I can tell you UBC has a stunning coastal vibe, and U of T’s downtown Toronto location is historic. Want details on a specific campus?";
+            } else if (lowerInput.includes("how") && lowerInput.includes("apply")) {
+                response = "To apply, select a university and program in the Apply section, fill out the supplemental questions, and submit. Need help with a specific step?";
+            } else if (lowerInput === "hi" || lowerInput === "hello") {
+                response = "Hey there! How can I help you with Canadapp today?";
+            }
+
+            setTimeout(() => {
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'chat-bubble fade-in';
+                aiMessage.textContent = response;
+                messages.appendChild(aiMessage);
+                messages.scrollTop = messages.scrollHeight;
+            }, 500);
+
+            document.getElementById('chat-input').value = '';
+        }
+
+        // File Input Handler
+        document.getElementById('documents').addEventListener('change', (e) => {
+            const label = document.querySelector('.file-input-label');
+            label.textContent = e.target.files.length > 0 ? `${e.target.files.length} file(s) selected` : 'Choose Files';
+            label.classList.toggle('selected', e.target.files.length > 0);
+        });
+    </script>
+</body>
+
+</html>

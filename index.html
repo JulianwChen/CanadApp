@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canadapp - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Modern Font */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            margin: 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Button Styles */
+        .btn-container {
+            display: inline-block;
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+            transition: all 0.3s ease;
+            border-radius: 9999px;
+            color: #fff;
+        }
+
+        .btn-gradient:hover {
+            box-shadow: 0 12px 24px rgba(107, 72, 255, 0.5);
+        }
+
+        /* Chat Bubble */
+        .chat-bubble {
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.02);
+        }
+
+        /* Navigation Menu */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.9);
+            z-index: 30;
+            padding: 0.55rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav ul li a {
+            color: #fff;
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #6b48ff;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: relative;
+            width: 100%;
+            height: 88vh;
+            /* Increased from 55vh to 88vh (55 + 55/3 ≈ 73, rounded to 88) */
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        /* Centering and Table */
+        section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero-section {
+            min-height: 88vh;
+        }
+
+        /* Match video height */
+        .comparison-section {
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        table {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border: 1px solid #333;
+        }
+
+        th {
+            background: #333;
+            font-weight: 600;
+        }
+
+        td {
+            background: #252525;
+        }
+
+        .check {
+            color: #00cc00;
+            font-size: 1.5rem;
+        }
+
+        .x {
+            color: #ff6b6b;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+    <!-- Navigation Menu -->
+    <nav>
+        <div class="logo">Canadapp</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="why-us.html">Why Us</a></li>
+            <li><a href="signup.html">Sign Up</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="help-desk.html">Help Desk</a></li>
+        </ul>
+    </nav>
+
+    <!-- 3D Waves Background -->
+    <canvas id="wave-canvas"></canvas>
+
+    <!-- Hero Section with Video Background -->
+    <section class="hero-section relative">
+        <div class="video-background">
+            <video autoplay muted loop>
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="hero-content max-w-4xl px-6">
+            <h1 class="text-6xl md:text-8xl font-extrabold mb-10 fade-in-up">Canadapp</h1>
+            <!-- Reduced from 7xl/9xl to 6xl/8xl -->
+            <p class="text-2xl md:text-3xl mb-12 fade-in-up float" style="animation-delay: 0.2s;">
+                Your streamlined path to Canadian universities.
+            </p> <!-- Reduced from 3xl/4xl to 2xl/3xl -->
+            <div class="btn-container">
+                <button class="btn-gradient py-5 px-12 text-2xl font-semibold float"
+                    onclick="window.location.href='signup.html'">
+                    Start Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Competitors Comparison Section -->
+    <section class="comparison-section px-6 relative z-10">
+        <div class="max-w-6xl">
+            <h2 class="text-5xl font-extrabold mb-16 fade-in-up">Canadapp vs Competitors</h2>
+            <table class="fade-in-up" style="animation-delay: 0.3s;">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Canadapp</th>
+                        <th>OUInfo.ca</th>
+                        <th>UniversityStudy.ca</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Specific Program Info</td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="check">✔</span></td>
+                    </tr>
+                    <tr>
+                        <td>Personal Experiences</td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="x">✘</span></td>
+                        <td><span class="x">✘</span></td>
+                    </tr>
+                    <tr>
+                        <td>Program Requirements</td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="check">✔</span></td>
+                    </tr>
+                    <tr>
+                        <td>Residence Costs</td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="x">✘</span></td>
+                    </tr>
+                    <tr>
+                        <td>AI Chat Support</td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="x">✘</span></td>
+                        <td><span class="x">✘</span></td>
+                    </tr>
+                    <tr>
+                        <td>Personalized Insights</td>
+                        <td><span class="check">✔</span></td>
+                        <td><span class="x">✘</span></td>
+                        <td><span class="x">✘</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Canadapp AI Chat Widget -->
+    <div id="chat-widget"
+        class="fixed bottom-12 right-12 w-80 bg-gray-900 bg-opacity-90 rounded-2xl shadow-2xl hidden flex-col z-20">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-3 rounded-t-2xl flex justify-between items-center">
+            <h3 class="text-lg font-semibold">Canadapp AI <span class="text-sm font-normal">Powered by Grok</span></h3>
+            <button id="close-chat" class="text-white hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="chat-messages" class="p-4 flex-1 overflow-y-auto h-64 bg-gray-800 bg-opacity-50 rounded-b-2xl">
+            <div class="chat-bubble bg-indigo-500 p-3 rounded-lg mb-3 text-lg">
+                Hi! I’m Canadapp AI, powered by Grok from xAI. How can I assist you today?
+            </div>
+        </div>
+        <div class="p-4">
+            <input id="chat-input" type="text" placeholder="Ask me anything..."
+                class="w-full p-3 rounded-lg bg-gray-700 bg-opacity-70 text-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-400">
+        </div>
+    </div>
+    <div class="btn-container fixed bottom-12 right-12 z-20">
+        <button id="chat-toggle" class="btn-gradient p-4 float">
+            <i class="fas fa-comment-dots text-xl"></i>
+        </button>
+    </div>
+
+    <div id="login-form" class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md mx-auto mt-8">
+        <h2 class="text-2xl font-bold mb-6 text-center">Login to Canadapp</h2>
+        <div class="mb-4">
+          <label class="block text-gray-300 mb-2" for="login-email">Email</label>
+          <input type="email" id="login-email" class="w-full p-3 rounded bg-gray-800 text-white" placeholder="Enter your email">
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-300 mb-2" for="login-password">Password</label>
+          <input type="password" id="login-password" class="w-full p-3 rounded bg-gray-800 text-white" placeholder="Enter your password">
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition duration-300">
+          Login
+        </button>
+        <p class="text-center mt-4 text-gray-400">
+          Don't have an account? <a href="signup.html" class="text-indigo-400 hover:text-indigo-300">Sign up</a>
+        </p>
+      </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Three.js Waves (kept for lower sections)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('wave-canvas'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.PlaneGeometry(100, 100, 32, 32);
+        const material = new THREE.MeshBasicMaterial({ color: 0x6b48ff, wireframe: true, transparent: true, opacity: 0.15 });
+        const plane = new THREE.Mesh(geometry, material);
+        scene.add(plane);
+
+        plane.rotation.x = -Math.PI / 2;
+        camera.position.z = 50;
+        camera.position.y = 50;
+        camera.lookAt(0, 0, 0);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            plane.rotation.z += 0.005;
+            const time = Date.now() * 0.001;
+            for (let i = 0; i < plane.geometry.vertices.length; i++) {
+                plane.geometry.vertices[i].z = Math.sin(i + time) * 5;
+            }
+            plane.geometry.verticesNeedUpdate = true;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Chat Widget Logic
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatWidget = document.getElementById('chat-widget');
+        const closeChat = document.getElementById('close-chat');
+        const chatInput = document.getElementById('chat-input');
+        const chatMessages = document.getElementById('chat-messages');
+
+        chatToggle.addEventListener('click', () => {
+            chatWidget.classList.toggle('hidden');
+            chatToggle.parentElement.classList.toggle('hidden');
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatWidget.classList.add('hidden');
+            chatToggle.parentElement.classList.remove('hidden');
+        });
+
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && chatInput.value.trim()) {
+                const userMessage = document.createElement('div');
+                userMessage.className = 'chat-bubble bg-gray-600 p-3 rounded-lg mb-3 text-lg text-right';
+                userMessage.textContent = chatInput.value;
+                chatMessages.appendChild(userMessage);
+
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'chat-bubble bg-indigo-500 p-3 rounded-lg mb-3 text-lg';
+                aiMessage.textContent = `I’m Canadapp AI, powered by Grok from xAI. You asked: "${chatInput.value}". As of March 05, 2025, I can provide real-time insights or analyze data for your applications. How can I help?`;
+                setTimeout(() => chatMessages.appendChild(aiMessage), 500);
+
+                chatInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+
+        // Resize handler for Three.js
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+    <script src="js/script-includes.js"></script>
+</body>
+
+</html>
